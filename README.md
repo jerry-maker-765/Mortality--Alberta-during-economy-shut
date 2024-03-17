@@ -20,10 +20,12 @@ inputs
 - sketches
 - figure1.jpg
 - figure2.jpg
+
 outputs
   - Mortality_Alberta.pdf
   - Mortality_Alberta.qmd 
   - references.bib - reference list for Mortality_Alberta.pdf
+
 replication
 - figures
  - fig-one-1.pdf
