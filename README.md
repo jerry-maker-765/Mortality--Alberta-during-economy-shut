@@ -18,4 +18,31 @@ inputs
 - llm
   - usage.txt - The conversation history with ChatGPT
 - sketches
-- 
+- figure1.jpg
+- figure2.jpg
+outputs
+  - Mortality_Alberta.pdf
+  - Mortality_Alberta.qmd 
+  - references.bib - reference list for Mortality_Alberta.pdf
+replication
+- figures
+ - fig-one-1.pdf
+ - fig-one-2.pdf
+ - fig-two-1.pdf
+-scripts
+ - 00_simulation.R
+  - 01_downloaddata.R
+  - 02_cleandata.R
+  - 03_testdata.R
+
+## LLM
+
+This report uses LLM (chat-gpt 4) for the writing part of the code, details can be found in usage.txt to view the usage log.
+
+## Reproducibility
+
+Download all files and open the R project project.Rproj in R Studio.
+
+To replicate the paper, convert outputs/Mortality_Alberta.qmd to pdf format.
+
+To replicate the code, run outputs/Mortality_Alberta.qmd in R studio.
