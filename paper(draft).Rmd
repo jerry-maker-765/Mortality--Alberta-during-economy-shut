@@ -186,7 +186,12 @@ $$log(E(y)) = 7.04 + 0.444 x_{1} - 0.437 x_{2} + 0.222 x_{3} + 0.046 x_{4}$$ {#e
 
 $$ E(y) = e^{7.04 + 0.444 x_{1} - 0.437 x_{2} + 0.222 x_{3} + 0.046 x_{4}}$$ {#eq-equation4}
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Comparing posterior prediction checks for Poisson and negative binomial models", fig.width=7, fig.height=3.2}
+## Poisson vs Negative Binomial model
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=7, fig.height=3.2}
+
+#| label: fig-one
+#| #| fig-cap: "Comparing posterior prediction checks for Poisson and negative binomial models"
+#| 
 pp_check(cause_of_death_alberta_poisson) +
   theme(legend.position = "bottom")
 
@@ -204,11 +209,69 @@ The second graph presents a relatively smooth and continuous distribution, where
 It is evident that the precision of the Poisson model's predictions is not as high as that of the negative binomial model. To further confirm our observation, we can use the resampling method Leave-One-Out (LOO) Cross-Validation (CV) to compare the models.
 
 
-```{r}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 poisson <- loo(cause_of_death_alberta_poisson, cores = 2)
 neg_binomial <- loo(cause_of_death_alberta_neg_binomial, cores = 2)
 
 loo_compare(poisson, neg_binomial)
 ```
+
+In the LOO comparison results, the LOOIC difference for the cause_of_death_alberta_neg_binomial model is 0.0, while for the cause_of_death_alberta_poisson model, it is -4954.0. This negative value indicates that the predictive performance of the Poisson model is significantly worse than that of the negative binomial model. The second column shows the change in the effective sample size (displayed here as 1208.0), which is an estimate of the uncertainty in the model comparison.
+
+These results indicate that among the two models, the negative binomial regression model (cause_of_death_alberta_neg_binomial) performs better under Leave-One-Out cross-validation, meaning it has better predictive performance for the data. This further supports the previous observation that the negative binomial model is more suitable for handling overdispersed count data.
+
+# result
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=7, fig.height=3.2}
+#| label: fig-two
+#| #| fig-cap: "Annual number of deaths for the top-five causes in 2003, since 2001, for Alberta, Canada"
+#| 
+alberta_cod |>
+  ggplot(aes(x = calendar_year, y = total_deaths, color = cause)) +
+  geom_line() +
+  theme_minimal() +
+  scale_color_brewer(palette = "Set1") +
+  labs(x = "Year", y = "Annual number of deaths in Alberta") +
+  facet_wrap(vars(cause), dir = "v", ncol = 1) +
+  theme(legend.position = "none",
+        axis.text.y = element_text(size = 5)) 
+```
+
+Using line graphs, we looked at trends in the number of deaths from these five causes of death from 2001 to 2022.
+In Alberta, trends over time in the annual number of deaths from the five leading causes of death show different patterns. Annual deaths from acute myocardial infarction and all other forms of chronic ischemic heart disease have remained relatively stable, with no significant upward or downward trends. In contrast, the number of deaths from atherosclerotic cardiovascular disease has declined slightly. On the other hand, the number of deaths from malignant tumors of the trachea, bronchus and lungs rose slightly, while the number of deaths from organic dementia showed a more significant increasing trend. Such changes may reflect the aging of the population and changes in the health care field.
+
+
+```{r}
+name <- c(" chronic ischemic heart disease", "Atherosclerotic cardiovascular disease", "Malignant neoplasms of trachea, bronchus and lungr", "Organic dementia", "Acute myocardial infarction")
+
+expected_deaths_poisson <- rep(exp(7.038), length(name)) 
+expected_deaths_negbin <- rep(exp(7.04), length(name))
+
+expected_deaths_poisson[1] <- exp(7.038 + 0.446)  
+expected_deaths_poisson[2] <- exp(7.038 - 0.436)  
+expected_deaths_poisson[3] <- exp(7.038 + 0.223)  
+expected_deaths_poisson[4] <- exp(7.038 + 0.045)  
+
+
+expected_deaths_negbin[1] <- exp(7.04 + 0.444)  
+expected_deaths_negbin[2] <- exp(7.04 - 0.437)  
+expected_deaths_negbin[3] <- exp(7.04 + 0.222)  
+expected_deaths_negbin[4] <- exp(7.04 +0.046)  
+
+
+estimate <- data.frame(
+  Cause = name,
+  Poisson = expected_deaths_poisson,
+  `Negative Binomial` = expected_deaths_negbin
+)
+
+
+kable(estimate, format = "latex") %>%
+  kable_styling("striped", full_width = F)
+
+
+print(estimate)
+```
+
 
 
