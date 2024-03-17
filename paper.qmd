@@ -1,0 +1,37 @@
+---
+  title: "Mortality of Alberta: Study of causes of death after experiencing the 
+Great Depression"
+author:
+  - Jierui Miao
+  - shenzhe lu
+thanks: "Code and data supporting this analysis is available at: 
+https://github.com/jerry-maker-765/Mortality--Alberta-during-economy-shut.git"
+date: today
+date-format: long
+abstract: ""
+format: pdf
+number-sections: true
+toc: true
+bibliography: references.bib
+---
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE}
+
+library(tidyverse)
+library(boot)
+library(broom.mixed)
+library(collapse)
+library(dataverse)
+library(gutenbergr)
+library(janitor)
+library(knitr)
+library(marginaleffects)
+library(modelsummary)
+library(rstanarm)
+library(ggplot2)
+library(lubridate)
+library(kableExtra)
+library(gridExtra)
+library(arrow)
+
+
